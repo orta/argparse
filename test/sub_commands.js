@@ -85,3 +85,19 @@ describe('sub-commands', function () {
     assert.strictEqual(args.spam, undefined);
   });
 });
+
+it('should support running a command with subparsers which are not called then it has arguments', function () {
+  var parser = new ArgumentParser({ debug: true });
+  var subparsers = parser.addSubparsers({
+    title: 'subcommands',
+    dest: 'subcommand_name',
+    required: false
+  });
+  var c1 = subparsers.addParser('c1', { aliases: [ 'co' ] });
+  c1.addArgument([ '-f', '--foo' ], {});
+
+  assert.doesNotThrow(
+      function () { parser.parseArgs([]); },
+      /too few arguments/
+    );
+});
